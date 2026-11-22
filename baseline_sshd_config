@@ -1,12 +1,42 @@
-# Approved (baseline) SSH server configuration
+
+# Drift Detector - Approved SSH Security Baseline
+# Purpose: Reference configuration for SSH server comparison
+
+# Network settings
 Port 22
+AddressFamily any
+ListenAddress 0.0.0.0
+
+# Authentication settings
 PermitRootLogin no
 PasswordAuthentication no
 PubkeyAuthentication yes
-# PermitEmptyPasswords no
+PermitEmptyPasswords no
+KbdInteractiveAuthentication no
+AuthenticationMethods publickey
 MaxAuthTries 4
+MaxSessions 10
+LoginGraceTime 60
 StrictModes yes
+UsePAM yes
+
+# Access control
+AllowAgentForwarding no
+AllowTcpForwarding no
+GatewayPorts no
+PermitTunnel no
+PermitUserEnvironment no
 X11Forwarding no
-LogLevel VERBOSE
+
+# Connection management
 ClientAliveInterval 300
+ClientAliveCountMax 2
+MaxStartups 10:30:60
+TCPKeepAlive yes
+
+# Security and logging
+LogLevel VERBOSE
 IgnoreRhosts yes
+HostbasedAuthentication no
+PermitUserRC no
+Compression no

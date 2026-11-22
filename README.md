@@ -1,218 +1,188 @@
-# Config Drift Detector
+# AI-Assisted Configuration Drift Detector
 
-An AI-assisted configuration drift detection platform that identifies servers whose configurations differ from an approved fleet baseline, evaluates potential risks, and explains detected changes using a locally running open-weight AI model.
+An AI-assisted configuration drift detection platform that identifies differences between current server configurations and approved security baselines. It detects potential security misconfigurations, evaluates risks, and uses AI to explain detected issues.
 
-## Features
+The application supports both custom security baselines and a built-in standard security baseline.
 
-- **Configuration Drift Detection:** Identifies differences between approved baseline configurations and current configurations.
-- **Fleet-Based Scanning:** Supports configuration analysis across multiple server profiles.
-- **Risk Scoring:** Evaluates detected changes using predefined security rules and risk scores.
-- **AI-Powered Explanations:** Uses a local Qwen model through Ollama to explain detected drift and suggest possible fixes.
-- **Interactive Dashboard:** Displays configuration findings and scan results through Streamlit.
-- **Scan Reports:** Saves scan results for later review and analysis.
-- **Automated Testing:** Tests whether deliberately introduced configuration changes are detected correctly.
-- **Modular Architecture:** Separates data collection, detection, risk rules, AI explanations, and dashboard components.
+## 🚀 Features
 
-## Tech Stack
+- **Configuration Drift Detection:** Compares current configurations against approved baselines.
+- **Custom Baseline:** Upload your own configuration baseline for comparison.
+- **Standard Security Baseline:** Use predefined security rules when you do not have a custom baseline.
+- **Security Risk Assessment:** Identifies potential security issues and evaluates their risk.
+- **AI-Powered Explanations:** Uses AI to explain detected configuration changes and potential risks.
+- **Dual AI Provider Support:**
+  - Ollama for locally running AI models.
+  - Google Gemini for cloud-based AI explanations.
+- **Manual Verification:** Marks checks that require manual review.
+- **Review Decisions:** Allows findings to be reviewed and recorded.
+- **Dashboard:** Displays configuration analysis and security findings.
+- **Report Generation:** Supports JSON, CSV, and PDF reports.
+- **Automated Testing:** Includes tests for important project functionality.
 
-- **Programming Language:** Python
-- **Dashboard:** Streamlit
-- **Local AI Runtime:** Ollama
-- **AI Model:** Qwen2.5 3B (`qwen2.5:3b`)
-- **Configuration Data:** JSON and other explicitly supported configuration formats
-- **Testing:** Python testing tools
+## 🛠️ Technology Stack
 
-## Setup
+| Technology | Purpose |
+|---|---|
+| Python | Backend development |
+| Streamlit | User interface |
+| Ollama | Local AI inference |
+| Google Gemini | Cloud-based AI inference |
+| Qwen2.5:3B | Local language model |
+| JSON | Configuration and baseline data |
+| CSV | Report generation |
+| PDF | Report generation |
+| Pytest | Automated testing |
+| Git & GitHub | Version control |
 
-### Prerequisites
+## 📂 Project Structure
 
-1. Install Python 3.11 or later.
-2. Install Git.
-3. Install Ollama.
-4. Ensure the selected Qwen model is supported by your Ollama installation.
-
-### Clone the Repository
-
-```bash
-git clone <repo-url>
-cd config-drift-detector
+```text
+Drift_Detector-Project-0-/
+│
+├── app.py
+├── core.py
+├── ui.py
+│
+├── ai_provider.py
+├── ai_explainer.py
+├── explain.py
+│
+├── security_baseline.py
+├── data.py
+├── ssh_drift.py
+├── ssh_parser.py
+│
+├── tests/
+│
+├── reports/
+├── .streamlit/
+│
+├── baseline.json
+├── current.json
+├── baseline_sshd_config
+├── current_sshd_config
+├── sample_sshd_config
+│
+├── requirements.txt
+├── .gitignore
+├── LICENSE
+└── README.md
 ```
 
-Replace `<repo-url>` with your repository URL.
+## ⚙️ Installation and Setup
 
-### Create and Activate a Virtual Environment
+### 1. Clone the Repository
 
-On Windows PowerShell:
+```bash
+git clone https://github.com/Pratik1566/Drift_Detector-Project-0-.git
+cd Drift_Detector-Project-0-
+```
+
+### 2. Create a Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### 3. Activate the Virtual Environment
+
+**Windows PowerShell:**
 
 ```powershell
-python -m venv venv
-venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks activation, follow the Python virtual-environment instructions for your operating system.
-
-### Install Dependencies
+### 4. Install Dependencies
 
 ```bash
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-### Download the AI Model
+### 5. Configure the AI Provider
 
-Download the model used by the application:
+The application supports two AI providers:
+
+**Option A: Ollama (Local AI)**
+
+1. Install Ollama from https://ollama.com/
+2. Pull the Qwen2.5 model:
 
 ```bash
 ollama pull qwen2.5:3b
 ```
 
-Confirm that the model is available:
+3. Make sure Ollama is running on your machine.
+
+**Option B: Google Gemini (Cloud AI)**
+
+1. Obtain a Google Gemini API key.
+2. Configure the API key using the environment variable or Streamlit secrets setting expected by the application.
+3. Keep API keys private. Never commit them to GitHub.
+
+### 6. Run the Application
 
 ```bash
-ollama list
+python -m streamlit run app.py
 ```
 
-The model identifier configured in the application must match the model installed in Ollama.
+The application will open in your browser.
 
-## Run the Application
+## 🔍 How It Works
 
-From the project root directory, run:
+1. **Select a Baseline:** Upload a custom baseline or choose the built-in standard security baseline.
+2. **Provide Configuration:** Upload or select the current configuration files for analysis.
+3. **Detect Drift:** The detection engine compares the current configuration with the selected baseline.
+4. **Evaluate Risk:** Identified differences are evaluated using predefined security rules.
+5. **AI Explanation:** The selected AI provider explains relevant findings.
+6. **Review Findings:** Users can review findings and record decisions.
+7. **Generate Reports:** Export the analysis in JSON, CSV, or PDF format.
 
-```bash
-streamlit run app/app.py
-```
+## 🧠 AI Architecture
 
-Streamlit will display a local URL in the terminal. Open that URL in your browser to access the dashboard.
+The project combines rule-based configuration analysis with AI-generated explanations.
 
-> Ensure the application path matches the actual location of `app.py` in your repository.
+- **Rule-Based Engine:** Performs the actual configuration comparison and identifies potential drift.
+- **Ollama:** Provides local AI inference using a locally hosted model.
+- **Google Gemini:** Provides cloud-based AI explanations.
+- **AI Explanation Layer:** Converts technical findings into understandable explanations.
 
-## How It Works
+AI explanations complement the rule-based detection engine; they do not replace its security checks.
 
-1. **Load Configuration Data:** Read the available configuration data and approved baseline.
-2. **Parse Settings:** Extract supported settings from the input using the appropriate parser.
-3. **Compare Configurations:** Identify changed, missing, and newly added settings.
-4. **Evaluate Risks:** Apply predefined rules to assess the potential impact of detected changes.
-5. **Generate Explanations:** Use the local AI model to explain findings and suggest possible corrections.
-6. **Display Results:** Present findings through the dashboard.
-7. **Save Reports:** Store scan results for future review and comparison.
+## ☁️ Deployment
 
-## Project Structure
+The application can be deployed using Streamlit Community Cloud.
 
-```text
-config-drift-detector/
-├── fleet/
-│   ├── generate_fleet.py
-│   └── inject_drift.py
-├── collector/
-│   └── ...
-├── engine/
-│   └── ...
-├── rules/
-│   └── risky_settings.json
-├── ai/
-│   ├── mock.py
-│   └── ...
-├── app/
-│   └── app.py
-├── tests/
-│   └── ...
-├── docs/
-│   └── samples/
-├── requirements.txt
-└── README.md
-```
+For cloud deployment:
 
-This is an illustrative project structure. Update it to reflect the files and directories actually present in the repository.
+- Push the project to a GitHub repository.
+- Connect the repository to Streamlit Community Cloud.
+- Set the main application file to `app.py`.
+- Configure the required Gemini API key through the deployment's secrets settings if using Gemini.
+- Do not commit API keys or other secrets.
 
-## AI Model
+**Note:** A locally running Ollama instance on your computer is not automatically accessible to a cloud-hosted application. Use a supported cloud AI provider, such as Gemini, for cloud deployment unless you have separately configured a secure and accessible Ollama service.
 
-- **Model Provider:** Alibaba Cloud (Qwen)
-- **Model:** Qwen2.5 3B
-- **Model Identifier:** `qwen2.5:3b`
-- **Runtime:** Ollama
-- **Execution:** Locally on the user's machine
-- **Parameters:** Approximately 3 billion
-- **Model License:** Refer to the official model repository and model-provider terms for the applicable license.
+## 🔐 Security Considerations
 
-### Official Model and License References
+- Do not upload confidential production configuration files to an untrusted environment.
+- Never expose API keys, passwords, or private credentials.
+- Review detected findings before making configuration changes.
+- The application is designed for configuration analysis and reporting; it does not automatically modify production server configurations.
 
-- **Ollama:** https://ollama.com/
-- **Qwen2.5 3B on Ollama:** https://ollama.com/library/qwen2.5:3b
-- **Qwen2.5 Official Repository and License:** https://github.com/QwenLM/Qwen2.5
-- **Qwen Model Provider:** https://qwen.ai/
+## 🔮 Future Improvements
 
-The AI model is a third-party component and is licensed separately from this project's source code. Review the applicable model license and terms of use before redistribution or deployment.
+- Support for additional server configuration formats.
+- Expanded security baseline coverage.
+- More detailed risk analysis.
+- Additional AI provider integrations.
+- Improved reporting and visualization.
+- Extended automated test coverage.
 
-## Security Considerations
+## 👨‍💻 Repository
 
-- Scan only systems and configuration files you are authorized to assess.
-- Treat configuration files as potentially sensitive because they may contain internal infrastructure details.
-- Avoid exposing credentials, private keys, tokens, or other secrets in scan reports or AI prompts.
-- Review AI-generated explanations and recommendations before applying any changes.
-- Do not interpret a risk score as a probability that an attack will occur.
-- Unsupported directives and parsing limitations should be reported clearly.
-- Do not automatically modify production configurations without an authorized, tested change-management process.
+GitHub: https://github.com/Pratik1566/Drift_Detector-Project-0-
 
-## Limitations
+## 📄 License
 
-- Detection accuracy depends on the quality of the approved baseline, parsing logic, and security rules.
-- Different configuration formats require their own parsers and validation rules.
-- Some configurations contain defaults, included files, conditional sections, or other behavior that a basic parser may not fully interpret.
-- AI-generated explanations may be incomplete or incorrect and should be validated.
-- Features such as Docker collection, multi-server scanning, and automated drift injection are available only when their corresponding modules are implemented.
-
-## Testing
-
-Run the project's tests using the test framework configured in the repository.
-
-If the project uses pytest, install it if necessary and run:
-
-```bash
-python -m pytest
-```
-
-Tests should cover:
-
-- Unchanged configurations.
-- Changed settings.
-- Missing settings.
-- Newly added settings.
-- Risk-rule evaluation.
-- Invalid or unsupported configuration input.
-- AI response validation and fallback behavior.
-
-## Development Workflow
-
-1. Create a separate feature branch.
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. Make changes within your assigned files or modules.
-3. Run the relevant tests.
-4. Commit your changes.
-
-   ```bash
-   git add .
-   git commit -m "Add your feature description"
-   ```
-
-5. Push your branch.
-
-   ```bash
-   git push -u origin feature/your-feature-name
-   ```
-
-6. Open a pull request for review.
-
-Avoid modifying the same files as another team member without coordinating first.
-
-## Contributions
-
-Contributions are welcome. Please use feature branches, test changes before submitting them, and describe the purpose and behavior of the changes in the pull request.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
-The project's MIT license applies to the project code covered by that license, not automatically to third-party AI models or dependencies.
+This project is distributed under the license included in this repository.

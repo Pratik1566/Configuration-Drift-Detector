@@ -1,15 +1,42 @@
-# Current (observed) SSH server configuration
 
-Port 22   # standard port
+# Drift Detector - Current Observed SSH Configuration
+# Contains intentional deviations from the approved baseline
+
+# Network settings
+Port 2222
+AddressFamily any
+ListenAddress 0.0.0.0
+
+# Authentication settings
 PermitRootLogin yes
-PasswordAuthentication no
+PasswordAuthentication yes
 PubkeyAuthentication yes
-# PermitEmptyPasswords is missing on purpose
-MaxAuthTries 4
+PermitEmptyPasswords no
+KbdInteractiveAuthentication no
+AuthenticationMethods any
+MaxAuthTries 6
+MaxSessions 10
+LoginGraceTime 120
 StrictModes yes
+UsePAM yes
+
+# Access control
+AllowAgentForwarding yes
+AllowTcpForwarding yes
+GatewayPorts no
+PermitTunnel no
+PermitUserEnvironment no
 X11Forwarding yes
-LogLevel INFO
+
+# Connection management
 ClientAliveInterval 300
+ClientAliveCountMax 2
+MaxStartups 10:30:60
+TCPKeepAlive yes
+
+# Security and logging
+LogLevel INFO
 IgnoreRhosts yes
 
+PermitUserRC no
 Compression yes
